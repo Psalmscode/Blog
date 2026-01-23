@@ -1,0 +1,15 @@
+<article class="article-post">
+    <h1 class="article-post_title"><%= data.title %></h1>
+    
+    <div class="article-post_body">
+        <%- data.content.replace(/\n\n/g, '</p><p>').replace(/\n/g, '<br>').replace(/^/, '<p>').replace(/$/, '</p>') %>
+    </div>
+    
+    <% if (data.createdAt) { %>
+        <div class="article-post_date">
+            <p>Published on <%= data.createdAt.toDateString() %></p>
+        </div>
+    <% } %>
+</article>
+
+<a href="/" class="back-link">← Back to Posts</a>

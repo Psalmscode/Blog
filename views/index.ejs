@@ -1,0 +1,31 @@
+<div class="author">
+    <div>
+        <h1 class="author_heading">Hi, I'm Wonder</h1>
+        <p class="author_body">Welcome to my blog. I write about web development, programming, and modern technologies.</p>
+    </div>
+    <img src="/img/Wonder_Image_ob57loob57loob57.png" alt="Wonder - Blog Author" class="hero-image">
+</div>
+
+<section class="articles">
+    <h2 class="articles_heading">Latest Posts</h2>
+
+   <ul class="article-ul">
+    <% if (data && data.length > 0) { %>
+        <% data.forEach(Post => { %>
+            <li>
+                <a href="/post/<%= Post._id %>">
+                    <span><%= Post.title %></span>
+                    <span class="article-list_date"><%= Post.createdAt ? Post.createdAt.toDateString() : 'No Date' %></span>
+                </a>
+            </li>
+        <% }) %>
+    <% } else { %>
+        <p>No posts found. Create one using your /api/test route!</p>
+    <% } %>
+</ul>
+
+<% if (nextPage !== null) { %>
+    <a href="/?page=<%= nextPage %>" class="pagination">View Newer Posts &gt;</a>
+<% } %>
+
+</section>

@@ -1,0 +1,82 @@
+<div class="dashboard-container">
+    <h1>Welcome to Admin Dashboard</h1>
+
+    <p>
+        You are logged in as: 
+        <strong><%= locals.username || 'Admin' %></strong>
+    </p>
+    
+    <div class="dashboard-links">
+        <a href="/admin/logout" class="btn btn-logout">Logout</a>
+    </div>
+
+    <div class="admin-title">
+        <h2>All Posts</h2>
+        <a href="/admin/add-post" class="btn">Add New Post</a>
+    </div>
+
+    <ul class="admin-posts">
+        <% data.forEach(post => { %>
+            <li>
+                <a href="/post/<%= post._id %>">
+                    <%= post.title %> &nearr;
+                </a>
+
+                <div class="admin-post-controls">
+                    <a href="/admin/edit-post/<%= post._id %>" class="btn">Edit</a>
+
+                    <form action="/admin/delete-post/<%= post._id %>?_method=DELETE" method="POST">
+                        <button type="submit" class="btn">Delete</button>
+                    </form>
+                </div>
+            </li>
+        <% }); %>
+    </ul>
+</div>
+
+
+<style>
+    .dashboard-container {
+        max-width: 1000px;
+        margin: 20px auto;
+        padding: 20px;
+    }
+
+    .dashboard-links {
+        margin: 20px 0;
+    }
+
+    .btn {
+        padding: 10px 20px;
+        margin: 5px;
+        background-color: #007bff;
+        color: white;
+        text-decoration: none;
+        border-radius: 4px;
+        display: inline-block;
+    }
+
+    .btn-logout {
+        background-color: #dc3545;
+    }
+
+    .posts-list {
+        margin-top: 20px;
+    }
+
+    .post-item {
+        padding: 15px;
+        border: 1px solid #ddd;
+        margin: 10px 0;
+        border-radius: 4px;
+        background-color: #f9f9f9;
+    }
+
+    .post-item h3 {
+        margin: 0 0 10px 0;
+    }
+
+    .post-item small {
+        color: #666;
+    }
+</style>

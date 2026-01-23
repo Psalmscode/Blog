@@ -1,0 +1,32 @@
+<section class="search-page">
+    <div class="search-header">
+        <h1 class="search-title">Search Results</h1>
+        <p class="search-term">for "<span class="highlight"><%= searchTerm %></span>"</p>
+    </div>
+
+    <% if (data && data.length > 0) { %>
+        <div class="search-results">
+            <p class="results-count">Found <strong><%= data.length %></strong> post<%= data.length === 1 ? '' : 's' %></p>
+            
+            <ul class="article-ul">
+                <% data.forEach(post => { %>
+                    <li class="search-result-item">
+                        <a href="/post/<%= post._id %>">
+                            <div class="result-content">
+                                <span class="result-title"><%= post.title %></span>
+                                <span class="article-list_date"><%= post.createdAt ? post.createdAt.toDateString() : 'No Date' %></span>
+                            </div>
+                        </a>
+                    </li>
+                <% }) %>
+            </ul>
+        </div>
+    <% } else { %>
+        <div class="no-results">
+            <div class="no-results-content">
+                <p class="no-results-message">😔 No posts found matching "<strong><%= searchTerm %></strong>"</p>
+                <p class="no-results-suggestion">Try searching with different keywords or <a href="/" class="back-link">← Back to Home</a></p>
+            </div>
+        </div>
+    <% } %>
+</section>

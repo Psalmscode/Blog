@@ -1,0 +1,94 @@
+<a href="/admin/dashboard">&larr; Back</a>
+<div class="admin-title">
+    <h2>View / Edit Post</h2>
+
+    <form action="/admin/delete-post/<%= data._id %>?_method=DELETE" method="POST"
+        style="display: inline;">
+       <input type="submit" value="Delete" class="btn btn-delete-post">
+
+    </form>
+</div>
+
+<% if(locals.message) { %>
+    <div class="alert alert-error" style="padding: 10px; margin: 10px 0; background-color: #fee; border: 1px solid #fcc; border-radius: 4px; color: #c00;">
+        <%= locals.message %>
+    </div>
+<% } %>
+
+<form action="/admin/edit-post/<%= data._id %>?_method=PUT" method="POST">
+
+    <label for="title"><b>Title:</b></label>
+    <input type="text" placeholder="Post Title" name="title" value="<%= data.title %>" required>
+
+    <label for="content"><b>Content:</b></label>
+    <textarea name="content" cols="50" rows="10" required><%= data.content %></textarea>
+
+    <input type="submit" value="Update" class="btn">
+
+</form>
+
+<style>
+    form {
+        max-width: 600px;
+        margin: 20px 0;
+    }
+
+    label {
+        display: block;
+        margin-top: 15px;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+
+    input[type="text"],
+    textarea {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-family: Arial, sans-serif;
+        box-sizing: border-box;
+    }
+
+    .btn {
+        background-color: #007bff;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        margin-top: 15px;
+    }
+
+    .btn:hover {
+        background-color: #0056b3;
+    }
+
+    .btn-delete-post {
+        background-color: #dc3545;
+    }
+
+    .btn-delete-post:hover {
+        background-color: #c82333;
+    }
+
+    a {
+        color: #007bff;
+        text-decoration: none;
+        display: inline-block;
+        margin-bottom: 10px;
+    }
+
+    a:hover {
+        text-decoration: underline;
+    }
+
+    .alert-error {
+        padding: 10px;
+        margin: 10px 0;
+        background-color: #fee;
+        border: 1px solid #fcc;
+        border-radius: 4px;
+        color: #c00;
+    }
+</style>

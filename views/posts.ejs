@@ -1,0 +1,142 @@
+<div class="posts-container">
+    <h1>All Posts</h1>
+    
+    <% if(data && data.length > 0) { %>
+        <div class="posts-list">
+            <% data.forEach(post => { %>
+                <div class="post-card">
+                    <h2><a href="/post/<%= post._id %>"><%= post.title %></a></h2>
+                    <p class="post-excerpt"><%= post.content ? post.content.substring(0, 200) : 'No content' %>...</p>
+                    <div class="post-meta">
+                        <small>Created: <%= post.createdAt ? new Date(post.createdAt).toLocaleDateString() : 'N/A' %></small>
+                    </div>
+                    <a href="/post/<%= post._id %>" class="read-more">Read More &rarr;</a>
+                </div>
+            <% }); %>
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination">
+            <% if(current > 1) { %>
+                <a href="/posts?page=<%= parseInt(current) - 1 %>" class="btn">Previous</a>
+            <% } %>
+            
+            <span class="page-info">Page <%= current %></span>
+            
+            <% if(nextPage) { %>
+                <a href="/posts?page=<%= nextPage %>" class="btn">Next</a>
+            <% } %>
+        </div>
+    <% } else { %>
+        <div class="no-posts">
+            <p>No posts found.</p>
+            <a href="/" class="btn">Back to Home</a>
+        </div>
+    <% } %>
+</div>
+
+<style>
+    .posts-container {
+        max-width: 900px;
+        margin: 30px auto;
+        padding: 20px;
+    }
+
+    .posts-list {
+        margin: 30px 0;
+    }
+
+    .post-card {
+        padding: 20px;
+        border: 1px solid #ddd;
+        margin-bottom: 20px;
+        border-radius: 6px;
+        background-color: #f9f9f9;
+        transition: transform 0.2s;
+    }
+
+    .post-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    .post-card h2 {
+        margin: 0 0 10px 0;
+    }
+
+    .post-card h2 a {
+        color: #007bff;
+        text-decoration: none;
+    }
+
+    .post-card h2 a:hover {
+        text-decoration: underline;
+    }
+
+    .post-excerpt {
+        color: #666;
+        line-height: 1.6;
+        margin: 10px 0;
+    }
+
+    .post-meta {
+        color: #999;
+        font-size: 0.9em;
+        margin: 10px 0;
+    }
+
+    .read-more {
+        display: inline-block;
+        color: #007bff;
+        text-decoration: none;
+        margin-top: 10px;
+    }
+
+    .read-more:hover {
+        text-decoration: underline;
+    }
+
+    .pagination {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        margin: 30px 0;
+        align-items: center;
+    }
+
+    .page-info {
+        padding: 8px 15px;
+        background-color: #e9ecef;
+        border-radius: 4px;
+    }
+
+    .btn {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: white;
+        text-decoration: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .btn:hover {
+        background-color: #0056b3;
+    }
+
+    .no-posts {
+        text-align: center;
+        padding: 50px 20px;
+    }
+
+    .no-posts p {
+        font-size: 1.2em;
+        color: #666;
+        margin-bottom: 20px;
+    }
+
+    h1 {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+</style>
