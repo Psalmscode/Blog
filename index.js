@@ -86,7 +86,7 @@ require('dotenv').config();
 const express = require('express');
 const expressLayout = require('express-ejs-layouts');
 const session = require('express-session');
-const MongoStore = require('connect-mongo'); // 1. ADD THIS LINE
+const MongoStore = require('connect-mongo');
 const methodOverride = require('method-override');
 const connectDB = require('./server/route/config/db');
 const cookieParser = require('cookie-parser');
@@ -96,43 +96,46 @@ const PORT = process.env.PORT || 5000;
 
 const { isActiveRoute } = require('./server/routerHelpers');
 
-// Connect to DB first
+// 1. Connect to Database
 connectDB();
 
-// Middleware
+// 2. Standard Middleware
 app.use(express.static('public'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(methodOverride('_method'));
 
-// 2. UPDATED Session Configuration
+// 3. Session Configuration (Fixed for Render & MongoDB)
 app.use(session({
-    secret: process.env.SESSION_SECRET,
+    secret: process.env.SESSION_SECRET || 'keyboard cat',
     resave: false,
-    saveUninitialized: false, // Changed to false for better security/privacy
+    saveUninitialized: false,
     store: MongoStore.create({
         mongoUrl: process.env.MONGO_URL,
+        ttl: 14 * 24 * 60 * 60 // Sessions saved for 14 days
     }),
     cookie: {
         maxAge: 1000 * 60 * 60 * 24, // 24 hours
-        // Set secure to true if your site uses HTTPS (Render does by default)
-        secure: process.env.NODE_ENV === 'production' 
+        // Set secure to true if on Render (production)
+        secure: process.env.NODE_ENV === 'production',
+        httpOnly: true
     }
 }));
 
-// Templating Engine
+// 4. Templating Engine
 app.use(expressLayout);
 app.set('layout', './layouts/main');
 app.set('view engine', 'ejs');
 
 app.locals.isActiveRoute = isActiveRoute;
 
-// Routes
+// 5. Routes
 app.use('/', require('./server/route/main'));
 app.use('/admin', require('./server/route/admin'));
 app.use('/api', require('./server/route/postRoutes'));
 
+// 6. Start Server
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
