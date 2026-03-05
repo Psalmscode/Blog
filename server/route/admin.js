@@ -342,6 +342,8 @@ router.post('/add-post', verifyToken, async (req, res) => {
         const newPost = new Post({
             title: title,
             content: content,
+            author: req.user.username,
+            userId: req.user.userId,
             createdAt: new Date(),
             updatedAt: new Date()
         });
@@ -427,16 +429,31 @@ router.put('/edit-post/:id', verifyToken, async (req, res) => {
 
 /**
  * DELETE /admin/delete-post/:id
- * Admin - Delete Post
+ * Admin - Delete Any Post (Admin has ultimate power)
  */
 
 router.delete('/delete-post/:id', verifyToken, async (req, res) => {
     try {
         console.log('Delete post attempt by:', req.user.username, 'Post ID:', req.params.id);
 
+        const post = await Post.findById(req.params.id);
+        
+        if (!post) {
+            return res.status(404).render('admin/dashboard', {
+                locals: {
+                    title: "Admin Dashboard",
+                    description: "Simple blog built with Node.js, Express & MongoDB",
+                    message: "Post not found",
+                    username: req.user.username
+                },
+                layout: '../views/layouts/admin'
+            });
+        }
+
+        // Admin can delete any post
         await Post.findByIdAndDelete(req.params.id);
 
-        console.log('Post deleted successfully:', req.params.id);
+        console.log('Post deleted successfully by admin:', req.params.id);
         res.redirect('/admin/dashboard');
 
     } catch (error) {

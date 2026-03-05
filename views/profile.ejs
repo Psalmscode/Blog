@@ -1,0 +1,20 @@
+<div class="profile-container" style="max-width: 500px; margin: 50px auto; padding: 20px; border: 1px solid #ddd; border-radius: 5px;">
+    <h1>Edit Profile</h1>
+    
+    <form method="POST" action="/profile?_method=PUT" style="margin-top: 20px;">
+        <div style="margin-bottom: 15px;">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" value="<%= locals.user.username %>" required style="width: 100%; padding: 8px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 3px;">
+        </div>
+        
+        <div style="margin-bottom: 15px;">
+            <label for="bio">Bio:</label>
+            <textarea id="bio" name="bio" placeholder="Tell us about yourself..." style="width: 100%; padding: 8px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 3px; min-height: 100px;"><%= locals.user.bio || '' %></textarea>
+        </div>
+        
+        <div style="margin-top: 20px;">
+            <button type="submit" style="padding: 10px 20px; background-color: #28a745; color: white; border: none; border-radius: 3px; cursor: pointer; margin-right: 10px;">Save Changes</button>
+            <a href="/dashboard" style="display: inline-block; padding: 10px 20px; background-color: #6c757d; color: white; text-decoration: none; border-radius: 3px;">Cancel</a>
+        </div>
+    </form>
+</div>

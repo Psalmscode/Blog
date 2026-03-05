@@ -1,0 +1,23 @@
+<div class="dashboard-container" style="max-width: 800px; margin: 50px auto; padding: 20px;">
+    <h1>Welcome, <%= locals.user.username %>! 👋</h1>
+    
+    <div class="dashboard-content" style="background-color: #f9f9f9; padding: 20px; border-radius: 5px; margin-top: 20px;">
+        <div class="user-info" style="margin-bottom: 30px;">
+            <h2>Your Profile</h2>
+            <div style="background-color: white; padding: 15px; border-radius: 3px; border: 1px solid #ddd;">
+                <p><strong>Email:</strong> <%= locals.user.email %></p>
+                <p><strong>Username:</strong> <%= locals.user.username %></p>
+                <p><strong>Bio:</strong> <%= locals.user.bio || 'No bio yet' %></p>
+                <p><strong>Member Since:</strong> <%= new Date(locals.user.createdAt).toLocaleDateString() %></p>
+            </div>
+        </div>
+
+        <div class="actions" style="margin-top: 20px; display: flex; flex-wrap: wrap; gap: 10px;">
+            <a href="/user/posts" style="display: inline-block; padding: 10px 20px; background-color: #17a2b8; color: white; text-decoration: none; border-radius: 3px;">My Posts</a>
+            <a href="/user/add-post" style="display: inline-block; padding: 10px 20px; background-color: #ffc107; color: black; text-decoration: none; border-radius: 3px;">Create New Post</a>
+            <a href="/profile" style="display: inline-block; padding: 10px 20px; background-color: #28a745; color: white; text-decoration: none; border-radius: 3px;">Edit Profile</a>
+            <a href="/" style="display: inline-block; padding: 10px 20px; background-color: #6c757d; color: white; text-decoration: none; border-radius: 3px;">View Blog</a>
+            <a href="/logout" style="display: inline-block; padding: 10px 20px; background-color: #dc3545; color: white; text-decoration: none; border-radius: 3px;">Logout</a>
+        </div>
+    </div>
+</div>

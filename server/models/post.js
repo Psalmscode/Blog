@@ -10,6 +10,15 @@ const postSchema = new schema({
         type: String,
         required: true
     },
+    author: {
+        type: String,
+        default: 'Unknown'
+    },
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        default: null
+    },
     createdAt: {
         type: Date,
         default: Date.now

@@ -1,0 +1,45 @@
+<div class="user-posts-container" style="max-width: 900px; margin: 50px auto; padding: 20px;">
+    <h1>My Posts</h1>
+    
+    <div style="margin-bottom: 20px;">
+        <a href="/user/add-post" style="display: inline-block; padding: 10px 20px; background-color: #28a745; color: white; text-decoration: none; border-radius: 3px; margin-right: 10px;">+ New Post</a>
+        <a href="/dashboard" style="display: inline-block; padding: 10px 20px; background-color: #6c757d; color: white; text-decoration: none; border-radius: 3px;">Back to Dashboard</a>
+    </div>
+
+    <% if (locals.message) { %>
+        <div style="padding: 10px; margin-bottom: 15px; background-color: #f8d7da; color: #721c24; border-radius: 3px;">
+            <%= locals.message %>
+        </div>
+    <% } %>
+
+    <% if (locals.posts && locals.posts.length > 0) { %>
+        <div class="posts-list">
+            <% locals.posts.forEach(post => { %>
+                <div style="background-color: #f9f9f9; padding: 20px; margin-bottom: 20px; border-radius: 5px; border-left: 4px solid #007bff;">
+                    <h2 style="margin-top: 0;"><%= post.title %></h2>
+                    <p style="color: #666; font-size: 14px;">
+                        <strong>Created:</strong> <%= new Date(post.createdAt).toLocaleDateString() %>
+                        <span style="margin-left: 20px;">
+                            <strong>Updated:</strong> <%= new Date(post.updatedAt).toLocaleDateString() %>
+                        </span>
+                    </p>
+                    <p style="color: #333; line-height: 1.6;">
+                        <%= post.content.substring(0, 200) %>...
+                    </p>
+                    <div style="margin-top: 15px;">
+                        <a href="/user/edit-post/<%= post._id %>" style="display: inline-block; padding: 8px 15px; background-color: #007bff; color: white; text-decoration: none; border-radius: 3px; margin-right: 10px;">Edit</a>
+                        <form method="POST" action="/user/delete-post/<%= post._id %>?_method=DELETE" style="display: inline;">
+                            <button type="submit" style="padding: 8px 15px; background-color: #dc3545; color: white; border: none; border-radius: 3px; cursor: pointer; font-size: 14px;" onclick="return confirm('Are you sure you want to delete this post?');">Delete</button>
+                        </form>
+                        <a href="/" style="display: inline-block; padding: 8px 15px; background-color: #6c757d; color: white; text-decoration: none; border-radius: 3px;">View</a>
+                    </div>
+                </div>
+            <% }); %>
+        </div>
+    <% } else { %>
+        <div style="background-color: #e7e7ff; padding: 20px; border-radius: 5px; text-align: center;">
+            <p>You haven't created any posts yet.</p>
+            <a href="/user/add-post" style="display: inline-block; padding: 10px 20px; background-color: #28a745; color: white; text-decoration: none; border-radius: 3px; margin-top: 10px;">Create Your First Post</a>
+        </div>
+    <% } %>
+</div>

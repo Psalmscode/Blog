@@ -52,6 +52,7 @@ app.locals.isActiveRoute = isActiveRoute;
 
 // 5. Routes
 app.use('/', require('./server/route/main'));
+app.use('/', require('./server/route/userRoutes'));
 app.use('/admin', require('./server/route/admin'));
 app.use('/api', require('./server/route/postRoutes'));
 
