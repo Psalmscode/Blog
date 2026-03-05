@@ -265,6 +265,11 @@ router.post('/contact', async (req, res) => {
                     currentRoute: '/contact',
                     message: 'Please provide a valid email address'
                 },
+                layout: '../views/layouts/main'
+            });
+        }
+
+        // Configure email transporter
         if (!process.env.GMAIL_USER || !process.env.GMAIL_PASSWORD) {
             throw new Error('Email configuration is missing. Please set GMAIL_USER and GMAIL_PASSWORD in your .env file. Use an App Password, not your regular Gmail password.');
         }
@@ -278,12 +283,7 @@ router.post('/contact', async (req, res) => {
         });
 
         // Verify transporter connection before sending
-        await transporter.verify(   service: 'gmail',
-            auth: {
-                user: process.env.GMAIL_USER,
-                pass: process.env.GMAIL_PASSWORD
-            }
-        });
+        await transporter.verify();
 
         // Email content to send to admin
         const adminMailOptions = {
