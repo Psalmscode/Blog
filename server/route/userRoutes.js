@@ -230,17 +230,65 @@ router.get('/profile', verifyToken, async (req, res) => {
 router.put('/profile', verifyToken, async (req, res) => {
     try {
         const { username, bio } = req.body;
+
+        if (!username) {
+            const user = await User.findById(req.user.userId);
+            return res.render('profile', {
+                locals: {
+                    title: 'Edit Profile',
+                    currentRoute: '/profile',
+                    user,
+                    message: 'Username is required'
+                }
+            });
+        }
+
+        // Check if username is already taken by another user
+        const existingUser = await User.findOne({ 
+            username: username,
+            _id: { $ne: req.user.userId }
+        });
+
+        if (existingUser) {
+            const user = await User.findById(req.user.userId);
+            return res.render('profile', {
+                locals: {
+                    title: 'Edit Profile',
+                    currentRoute: '/profile',
+                    user,
+                    message: 'Username is already taken'
+                }
+            });
+        }
         
-        await User.findByIdAndUpdate(
+        const updatedUser = await User.findByIdAndUpdate(
             req.user.userId,
             { username, bio },
             { new: true }
         );
 
-        res.redirect('/dashboard');
+        console.log('User profile updated:', updatedUser.username);
+
+        res.render('profile', {
+            locals: {
+                title: 'Edit Profile',
+                currentRoute: '/profile',
+                user: updatedUser,
+                successMessage: 'Profile updated successfully!',
+                message: 'Profile updated successfully!'
+            }
+        });
     } catch (error) {
-        console.log(error);
-        res.status(500).send('Internal Server Error');
+        console.log('Profile update error:', error);
+        const user = await User.findById(req.user.userId);
+        res.render('profile', {
+            locals: {
+                title: 'Edit Profile',
+                currentRoute: '/profile',
+                user,
+                message: 'An error occurred while updating your profile'
+            }
+        });
     }
 });
 
