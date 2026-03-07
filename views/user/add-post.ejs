@@ -7,7 +7,7 @@
         </div>
     <% } %>
 
-    <form method="POST" action="/user/add-post" style="background-color: #f9f9f9; padding: 20px; border-radius: 5px; border: 1px solid #ddd;">
+    <form method="POST" action="/user/add-post" enctype="application/x-www-form-urlencoded" style="background-color: #f9f9f9; padding: 20px; border-radius: 5px; border: 1px solid #ddd;">
         <div style="margin-bottom: 20px;">
             <label for="title" style="display: block; font-weight: bold; margin-bottom: 5px;">Post Title:</label>
             <input type="text" id="title" name="title" placeholder="Enter your post title" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 3px; box-sizing: border-box; font-size: 16px;">

@@ -343,6 +343,9 @@ router.post('/user/add-post', verifyToken, async (req, res) => {
     try {
         const { title, content } = req.body;
 
+        console.log('User add-post attempt by:', req.user.username);
+        console.log('Request body:', { title, content });
+
         if (!title || !content) {
             return res.render('user/add-post', {
                 locals: {
@@ -363,18 +366,18 @@ router.post('/user/add-post', verifyToken, async (req, res) => {
             updatedAt: new Date()
         });
 
-        await newPost.save();
-        console.log('User post created:', title, 'by:', req.user.username);
+        const savedPost = await newPost.save();
+        console.log('User post created successfully:', title, 'ID:', savedPost._id, 'by:', req.user.username);
 
         res.redirect('/user/posts');
     } catch (error) {
-        console.log(error);
+        console.log('User add-post error:', error);
         res.render('user/add-post', {
             locals: {
                 title: 'Add New Post',
                 currentRoute: '/user/add-post',
                 user: req.user,
-                message: 'An error occurred while creating the post'
+                message: 'An error occurred while creating the post: ' + error.message
             }
         });
     }
@@ -402,6 +405,9 @@ router.put('/user/edit-post/:id', verifyToken, checkPostOwnership, async (req, r
     try {
         const { title, content } = req.body;
 
+        console.log('User edit-post attempt by:', req.user.username, 'Post ID:', req.params.id);
+        console.log('Request body:', { title, content });
+
         if (!title || !content) {
             return res.render('user/edit-post', {
                 locals: {
@@ -414,30 +420,42 @@ router.put('/user/edit-post/:id', verifyToken, checkPostOwnership, async (req, r
             });
         }
 
-        await Post.findByIdAndUpdate(
+        const updatedPost = await Post.findByIdAndUpdate(
             req.params.id,
             { title, content, updatedAt: new Date() },
-            { new: true }
+            { new: true, runValidators: true }
         );
 
-        console.log('User post updated:', req.params.id, 'by:', req.user.username);
+        if (!updatedPost) {
+            console.log('Post not found for update:', req.params.id);
+            return res.status(404).send('Post not found');
+        }
+
+        console.log('User post updated successfully:', req.params.id, 'New data:', updatedPost, 'by:', req.user.username);
         res.redirect('/user/posts');
     } catch (error) {
-        console.log(error);
-        res.status(500).send('Internal Server Error');
+        console.log('User edit-post error:', error);
+        res.status(500).send('Internal Server Error: ' + error.message);
     }
 });
 
 // DELETE /user/delete-post/:id - Delete user's own post
 router.delete('/user/delete-post/:id', verifyToken, checkPostOwnership, async (req, res) => {
     try {
-        await Post.findByIdAndDelete(req.params.id);
+        console.log('User delete-post attempt by:', req.user.username, 'Post ID:', req.params.id);
         
-        console.log('User post deleted:', req.params.id, 'by:', req.user.username);
+        const deletedPost = await Post.findByIdAndDelete(req.params.id);
+        
+        if (!deletedPost) {
+            console.log('Post not found for deletion:', req.params.id);
+            return res.status(404).send('Post not found');
+        }
+        
+        console.log('User post deleted successfully:', req.params.id, 'by:', req.user.username);
         res.redirect('/user/posts');
     } catch (error) {
-        console.log(error);
-        res.status(500).send('Error deleting post');
+        console.log('User delete-post error:', error);
+        res.status(500).send('Error deleting post: ' + error.message);
     }
 });
 

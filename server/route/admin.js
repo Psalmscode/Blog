@@ -325,6 +325,7 @@ router.post('/add-post', verifyToken, async (req, res) => {
         const { title, content } = req.body;
 
         console.log('Add post attempt by:', req.user.username);
+        console.log('Request body:', { title, content });
 
         if (!title || !content) {
             return res.status(400).render('admin/add-post', {
@@ -348,8 +349,8 @@ router.post('/add-post', verifyToken, async (req, res) => {
             updatedAt: new Date()
         });
 
-        await newPost.save();
-        console.log('Post created successfully:', title);
+        const savedPost = await newPost.save();
+        console.log('Post created successfully:', title, 'ID:', savedPost._id);
 
         res.redirect('/admin/dashboard');
     } catch (error) {
@@ -358,7 +359,7 @@ router.post('/add-post', verifyToken, async (req, res) => {
             locals: {
                 title: "Add New Post",
                 description: "Simple blog built with Node.js, Express & MongoDB",
-                message: "An error occurred while creating the post",
+                message: "An error occurred while creating the post: " + error.message,
                 username: req.user.username
             },
             layout: '../views/layouts/admin'
@@ -396,6 +397,7 @@ router.put('/edit-post/:id', verifyToken, async (req, res) => {
         const { title, content } = req.body;
 
         console.log('Edit post attempt by:', req.user.username, 'Post ID:', req.params.id);
+        console.log('Request body:', { title, content });
 
         if (!title || !content) {
             const data = await Post.findById(req.params.id);
@@ -411,18 +413,27 @@ router.put('/edit-post/:id', verifyToken, async (req, res) => {
             });
         }
 
-        await Post.findByIdAndUpdate(req.params.id, {
-            title: title,
-            content: content,
-            updatedAt: new Date()
-        });
+        const updatedPost = await Post.findByIdAndUpdate(
+            req.params.id, 
+            {
+                title: title,
+                content: content,
+                updatedAt: new Date()
+            },
+            { new: true, runValidators: true }
+        );
 
-        console.log('Post updated successfully:', req.params.id);
+        if (!updatedPost) {
+            console.log('Post not found for update:', req.params.id);
+            return res.status(404).send('Post not found');
+        }
+
+        console.log('Post updated successfully:', req.params.id, 'New data:', updatedPost);
         res.redirect('/admin/dashboard');
 
     } catch (error) {
         console.log('Edit post error:', error);
-        res.status(500).send('Error updating post');
+        res.status(500).send('Error updating post: ' + error.message);
     }
 });
 
@@ -436,29 +447,19 @@ router.delete('/delete-post/:id', verifyToken, async (req, res) => {
     try {
         console.log('Delete post attempt by:', req.user.username, 'Post ID:', req.params.id);
 
-        const post = await Post.findById(req.params.id);
-        
-        if (!post) {
-            return res.status(404).render('admin/dashboard', {
-                locals: {
-                    title: "Admin Dashboard",
-                    description: "Simple blog built with Node.js, Express & MongoDB",
-                    message: "Post not found",
-                    username: req.user.username
-                },
-                layout: '../views/layouts/admin'
-            });
-        }
+        const post = await Post.findByIdAndDelete(req.params.id);
 
-        // Admin can delete any post
-        await Post.findByIdAndDelete(req.params.id);
+        if (!post) {
+            console.log('Post not found for deletion:', req.params.id);
+            return res.status(404).send('Post not found');
+        }
 
         console.log('Post deleted successfully by admin:', req.params.id);
         res.redirect('/admin/dashboard');
 
     } catch (error) {
         console.log('Delete post error:', error);
-        res.status(500).send('Error deleting post');
+        res.status(500).send('Error deleting post: ' + error.message);
     }
 });
 
