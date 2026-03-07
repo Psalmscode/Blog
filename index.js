@@ -50,7 +50,29 @@ app.set('view engine', 'ejs');
 
 app.locals.isActiveRoute = isActiveRoute;
 
-// 5. Routes
+// 5. Make user info available to views (if authenticated)
+app.use((req, res, next) => {
+    // decode token if present so header can show username
+    const jwt = require('jsonwebtoken');
+    const token = req.cookies.userToken || req.cookies.authToken;
+    if (token) {
+        try {
+            const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key-change-in-production');
+            res.locals.user = decoded;
+            // also differentiate admin vs user
+            if (req.cookies.authToken) {
+                res.locals.user.userType = 'admin';
+            } else {
+                res.locals.user.userType = 'user';
+            }
+        } catch (err) {
+            // ignore invalid token
+        }
+    }
+    next();
+});
+
+// 6. Routes
 app.use('/', require('./server/route/main'));
 app.use('/', require('./server/route/userRoutes'));
 app.use('/admin', require('./server/route/admin'));

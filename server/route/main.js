@@ -2,6 +2,48 @@ const express = require('express');
 const router = express.Router();
 const Post = require('../models/post');
 const nodemailer = require('nodemailer');
+const jwt = require('jsonwebtoken');
+
+// Shared JWT secret for both user and admin tokens (environment variable)
+const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
+
+/**
+ * Middleware: require login (either user or admin)
+ * (kept for possible later use but not applied to main routes)
+ */
+const requireLogin = (req, res, next) => {
+    const userToken = req.cookies.userToken;
+    const adminToken = req.cookies.authToken;
+
+    if (userToken) {
+        try {
+            const decoded = jwt.verify(userToken, JWT_SECRET);
+            req.user = decoded;
+            req.user.userType = 'user';
+            return next();
+        } catch (err) {
+            console.log('Invalid user token:', err.message);
+            res.clearCookie('userToken');
+        }
+    }
+
+    if (adminToken) {
+        try {
+            const decoded = jwt.verify(adminToken, JWT_SECRET);
+            req.user = decoded;
+            req.user.userType = 'admin';
+            return next();
+        } catch (err) {
+            console.log('Invalid admin token:', err.message);
+            res.clearCookie('authToken');
+        }
+    }
+
+    // no valid token found, redirect to login page
+    return res.redirect('/login');
+};
+
+// NOTE: no "router.use(requireLogin);" here so homepage remains public
 
 
 /**
@@ -41,7 +83,8 @@ router.get('', async (req, res) => {
             data,
             current: page,
             nextPage: hasNextPage ? nextPage : null,
-            currentRoute: '/'
+            currentRoute: '/',
+            user: req.user
          });
 
     } catch (error) {
@@ -85,7 +128,8 @@ router.get('/posts', async (req, res) => {
             data,
             current: page,
             nextPage: hasNextPage ? nextPage : null,
-            layout: '../views/layouts/main'
+            layout: '../views/layouts/main',
+            user: req.user
         });
     } catch (error) {
         console.log('Posts page error:', error);
@@ -137,7 +181,8 @@ router.get('/post/:id', async (req, res) => {
         res.render('post', { 
             locals, 
             data,
-            layout: '../views/layouts/main' // Only include if using express-ejs-layouts
+            layout: '../views/layouts/main', // Only include if using express-ejs-layouts
+            user: req.user
         });
 
     } catch (error) {
@@ -177,7 +222,8 @@ router.post('/search', async (req, res) => {
             locals,
             data,
             searchTerm,
-            layout: '../views/layouts/main'
+            layout: '../views/layouts/main',
+            user: req.user
         });
     } catch (error) {
         console.log('Search error:', error);

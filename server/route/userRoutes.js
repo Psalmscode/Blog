@@ -117,6 +117,7 @@ router.post('/register', async (req, res) => {
             maxAge: 24 * 60 * 60 * 1000
         });
 
+        // After successfully registering, send the user to their dashboard
         res.redirect('/dashboard');
     } catch (error) {
         console.log(error);
@@ -177,6 +178,7 @@ router.post('/login', async (req, res) => {
             maxAge: 24 * 60 * 60 * 1000
         });
 
+        // After successful login, redirect to the user dashboard
         res.redirect('/dashboard');
     } catch (error) {
         console.log(error);

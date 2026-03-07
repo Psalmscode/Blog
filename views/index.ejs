@@ -6,6 +6,16 @@
     <img src="/img/Wonder_Image_ob57loob57loob57.png" alt="Wonder - Blog Author" class="hero-image">
 </div>
 
+<% if (user) { %>
+    <div class="login-info" style="text-align:right; margin:10px 0;">
+        <span>Logged in as <strong><%= user.username %></strong></span>
+        <% if (user.userType === 'admin') { %>
+            (<a href="/admin/dashboard">Admin Dashboard</a>)
+        <% } %>
+        | <a href="/logout" style="color:#007bff;">Logout</a>
+    </div>
+<% } %>
+
 <section class="articles">
     <h2 class="articles_heading">Latest Posts</h2>
 
