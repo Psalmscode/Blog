@@ -12,7 +12,7 @@
     <% } %>
 </article>
 
-<% if (user && (user.userType==='admin' || user.userId==data.userId)) { %>
+<% if (typeof user !== 'undefined' && user && (user.userType==='admin' || user.userId==data.userId)) { %>
   <div class="post-actions">
     <a href="<%= user.userType==='admin'
                 ? '/admin/edit-post/'+data._id

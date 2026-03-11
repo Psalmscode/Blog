@@ -12,7 +12,7 @@
                     </div>
                     <a href="/post/<%= post._id %>" class="read-more">Read More &rarr;</a>
 
-                    <% if (user && (user.userType==='admin' || user.userId==post.userId)) { %>
+                    <% if (typeof user !== 'undefined' && user && (user.userType==='admin' || user.userId==post.userId)) { %>
                         <span class="post-actions">
                             <% if (user.userType==='admin') { %>
                                 <form method="POST" action="/admin/delete-post/<%= post._id %>?_method=DELETE" style="display:inline">

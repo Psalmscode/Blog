@@ -47,6 +47,20 @@ const requireLogin = (req, res, next) => {
 
 
 /**
+*  GET /login-choice
+* LOGIN CHOICE PAGE (Admin vs User)
+*/
+router.get('/login-choice', (req, res) => {
+    try {
+        res.render('login-choice', { layout: false });
+    } catch (error) {
+        console.log(error);
+        res.status(500).send('Error loading login page');
+    }
+});
+
+
+/**
 *  GET /
 * HOME  
 */

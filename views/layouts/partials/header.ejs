@@ -8,12 +8,16 @@
             <li><a href="/posts" class="nav-link">Posts</a></li>
             <li><a href="/about" class="nav-link">About</a></li>
             <li><a href="/contact" class="nav-link">Contact</a></li>
-            <% if (user) { %>
+            <% if (typeof user !== 'undefined' && user) { %>
                 <li><a href="<%= user.userType==='admin' ? '/admin/add-post' : '/user/add-post' %>" class="nav-link">+ New post</a></li>
                 <li style="margin-left:20px">
-                    <span>Welcome, <strong><%= user.username %></strong></span>
+                    <span><% if (user.userType==='user') { %>👤 User: <% } %><strong><%= user.username %></strong></span>
                 </li>
                 <li><a href="/logout" class="nav-link">Logout</a></li>
+            <% } else { %>
+                <li style="margin-left:20px">
+                    <a href="/login-choice" class="nav-link" style="background:#667eea; color:white; padding:8px 15px; border-radius:4px;">Login / Register</a>
+                </li>
             <% } %>
         </ul>
     </nav>

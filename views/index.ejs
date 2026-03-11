@@ -6,7 +6,7 @@
     <img src="/img/Wonder_Image_ob57loob57loob57.png" alt="Wonder - Blog Author" class="hero-image">
 </div>
 
-<% if (user) { %>
+<% if (typeof user !== 'undefined' && user) { %>
     <div class="login-info" style="text-align:right; margin:10px 0;">
         <span>Logged in as <strong><%= user.username %></strong></span>
         <% if (user.userType === 'admin') { %>
@@ -27,7 +27,7 @@
                     <span><%= Post.title %></span>
                     <span class="article-list_date"><%= Post.createdAt ? Post.createdAt.toDateString() : 'No Date' %></span>
                 </a>
-                <% if (user && (user.userType==='admin' || user.userId==Post.userId)) { %>
+                <% if (typeof user !== 'undefined' && user && (user.userType==='admin' || user.userId==Post.userId)) { %>
                     <span class="post-actions">
                         <% if (user.userType==='admin') { %>
                             <form method="POST" action="/admin/delete-post/<%= Post._id %>?_method=DELETE" style="display:inline">
