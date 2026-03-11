@@ -11,6 +11,24 @@
                         <small>Created: <%= post.createdAt ? new Date(post.createdAt).toLocaleDateString() : 'N/A' %></small>
                     </div>
                     <a href="/post/<%= post._id %>" class="read-more">Read More &rarr;</a>
+
+                    <% if (user && (user.userType==='admin' || user.userId==post.userId)) { %>
+                        <span class="post-actions">
+                            <% if (user.userType==='admin') { %>
+                                <form method="POST" action="/admin/delete-post/<%= post._id %>?_method=DELETE" style="display:inline">
+                                    <button class="small danger">Delete</button>
+                                </form>
+                            <% } %>
+
+                            <a href="<%= user.userType==='admin' ? '/admin/edit-post/'+post._id : '/user/edit-post/'+post._id %>" class="small">Edit</a>
+                            
+                            <% if (user.userType==='user') { %>
+                                <form method="POST" action="/user/delete-post/<%= post._id %>?_method=DELETE" style="display:inline">
+                                    <button class="small danger">Delete</button>
+                                </form>
+                            <% } %>
+                        </span>
+                    <% } %>
                 </div>
             <% }); %>
         </div>

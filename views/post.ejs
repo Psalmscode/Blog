@@ -12,4 +12,21 @@
     <% } %>
 </article>
 
+<% if (user && (user.userType==='admin' || user.userId==data.userId)) { %>
+  <div class="post-actions">
+    <a href="<%= user.userType==='admin'
+                ? '/admin/edit-post/'+data._id
+                : '/user/edit-post/'+data._id %>"
+       class="btn">Edit</a>
+
+    <form method="POST"
+          action="<%= user.userType==='admin'
+                     ? '/admin/delete-post/'+data._id+'?_method=DELETE'
+                     : '/user/delete-post/'+data._id+'?_method=DELETE' %>"
+          style="display:inline">
+      <button class="btn danger">Delete</button>
+    </form>
+  </div>
+<% } %>
+
 <a href="/" class="back-link">← Back to Posts</a>

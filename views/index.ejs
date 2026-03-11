@@ -27,6 +27,23 @@
                     <span><%= Post.title %></span>
                     <span class="article-list_date"><%= Post.createdAt ? Post.createdAt.toDateString() : 'No Date' %></span>
                 </a>
+                <% if (user && (user.userType==='admin' || user.userId==Post.userId)) { %>
+                    <span class="post-actions">
+                        <% if (user.userType==='admin') { %>
+                            <form method="POST" action="/admin/delete-post/<%= Post._id %>?_method=DELETE" style="display:inline">
+                                <button class="small danger">Delete</button>
+                            </form>
+                        <% } %>
+
+                        <a href="<%= user.userType==='admin' ? '/admin/edit-post/'+Post._id : '/user/edit-post/'+Post._id %>" class="small">Edit</a>
+                        
+                        <% if (user.userType==='user') { %>
+                            <form method="POST" action="/user/delete-post/<%= Post._id %>?_method=DELETE" style="display:inline">
+                                <button class="small danger">Delete</button>
+                            </form>
+                        <% } %>
+                    </span>
+                <% } %>
             </li>
         <% }) %>
     <% } else { %>
